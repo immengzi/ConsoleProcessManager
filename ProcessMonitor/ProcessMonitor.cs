@@ -10,6 +10,10 @@ using Microsoft.Win32;
 
 namespace ProcessMonitor
 {
+
+    /// <summary>
+    /// 处理逻辑
+    /// </summary>
     class ProcessMonitor
     {
         private string activeProcessName;
@@ -27,15 +31,16 @@ namespace ProcessMonitor
 
         public void StartMonitoring()
         {
+            // 将 OnSessionSwitch 方法注册为 SessionSwitch 事件的处理程序
             SystemEvents.SessionSwitch += OnSessionSwitch;
             while (true)
             {
                 if (isMonitoring)
                 {
                     {
-                        var currentSoftwareName = GetActiveProcessName();
-
-                        if (currentSoftwareName != activeProcessName && currentSoftwareName != "Idle")
+                        var currentProcessName = GetActiveProcessName();
+                        // 排除无焦点的情况
+                        if (currentProcessName != activeProcessName && currentProcessName != "Idle")
                         {
                             var elapsed = stopwatch.Elapsed;
 
@@ -63,7 +68,7 @@ namespace ProcessMonitor
                             CsvWriter.WriteRecordsToCsv(records, "Record.csv");
 
                             stopwatch.Restart();
-                            activeProcessName = currentSoftwareName;
+                            activeProcessName = currentProcessName;
                         }
 
                         Thread.Sleep(10);
@@ -72,6 +77,12 @@ namespace ProcessMonitor
             }
             
         }
+        
+        /// <summary>
+        /// 锁屏时暂停记录
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OnSessionSwitch(object sender, SessionSwitchEventArgs e)
         {
             if (e.Reason == SessionSwitchReason.SessionLock)
@@ -85,7 +96,11 @@ namespace ProcessMonitor
                 Console.WriteLine("记录已恢复~");
             }
         }
-
+        
+        /// <summary>
+        /// 获得当前处于Active的进程名称
+        /// </summary>
+        /// <returns></returns>
         private string GetActiveProcessName()
         {
             var activeProcess = GetActiveProcess();
@@ -96,6 +111,10 @@ namespace ProcessMonitor
             return null;
         }
 
+        /// <summary>
+        /// 获得当前处于Active的进程ID
+        /// </summary>
+        /// <returns></returns>
         private Process GetActiveProcess()
         {
             var handle = GetForegroundWindow();
@@ -103,9 +122,10 @@ namespace ProcessMonitor
             return Process.GetProcessById((int)processId);
         }
 
+        // 获取当前前台窗口的句柄
         [DllImport("user32.dll")]
         private static extern IntPtr GetForegroundWindow();
-
+        // 获取该窗口所属的进程 ID
         [DllImport("user32.dll")]
         private static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint processId);
     }

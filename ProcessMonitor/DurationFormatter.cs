@@ -2,6 +2,10 @@
 
 namespace ProcessMonitor
 {
+
+    /// <summary>
+    /// 格式化时间
+    /// </summary>
     static class DurationFormatter
     {
         public static string FormatDuration(TimeSpan duration)

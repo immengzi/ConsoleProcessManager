@@ -2,6 +2,10 @@
 
 namespace ProcessMonitor
 {
+
+    /// <summary>
+    /// 定义Record类
+    /// </summary>
     class Record
     {
         public string ProcessName { get; set; }

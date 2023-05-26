@@ -3,6 +3,10 @@ using System.Text.Json;
 
 namespace ProcessMonitor
 {
+
+    /// <summary>
+    /// 定义配置项
+    /// </summary>
     class Config
     {
         // 是否开机自启

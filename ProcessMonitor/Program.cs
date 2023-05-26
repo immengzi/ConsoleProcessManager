@@ -2,6 +2,10 @@
 
 namespace ProcessMonitor
 {
+
+    /// <summary>
+    /// 主程序入口
+    /// </summary>
     class Program
     {
         static void Main(string[] args)

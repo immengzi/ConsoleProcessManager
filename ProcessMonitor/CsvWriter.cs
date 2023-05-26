@@ -4,6 +4,10 @@ using System.Text;
 
 namespace ProcessMonitor
 {
+
+    /// <summary>
+    /// 将监控结果记入CSV文件
+    /// </summary>
     static class CsvWriter
     {
         public static void WriteRecordsToCsv(List<Record> records, string filePath)
