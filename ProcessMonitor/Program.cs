@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace ProcessMonitor
 {
@@ -13,6 +13,7 @@ namespace ProcessMonitor
             var config = Config.LoadConfig();
             string themeColor = config.ThemeColor;
 
+            // 用于 Debug
             Console.WriteLine(themeColor);
             if (config.StartupEnabled)
             {
@@ -22,6 +23,15 @@ namespace ProcessMonitor
             else
             {
                 Console.WriteLine("开机自启已禁用。");
+            }
+
+            if (config.NotificationEnabled)
+            {
+                Console.WriteLine("桌面通知已开启。");
+            }
+            else
+            {
+                Console.WriteLine("桌面通知未开启。");
             }
 
             var processMonitorMonitor = new ProcessMonitor();
