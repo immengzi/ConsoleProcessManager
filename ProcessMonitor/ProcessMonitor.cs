@@ -42,28 +42,35 @@ namespace ProcessMonitor
                         // 排除无焦点的情况
                         if (currentProcessName != activeProcessName && currentProcessName != "Idle")
                         {
-                            var elapsed = stopwatch.Elapsed;
+                            double elapsedSeconds = stopwatch.Elapsed.TotalSeconds;
+                            int elapsedRoundedSeconds = elapsedSeconds < 1 ? 0 : (int)Math.Ceiling(elapsedSeconds);
+                            Console.WriteLine($"应用: {activeProcessName} | 开始时间: {DateTime.Now:yyyy-MM-dd HH:mm:ss} | 使用时长: {elapsedRoundedSeconds} 秒");
+                            WriteLog($"应用: {activeProcessName} | 开始时间: {DateTime.Now:yyyy-MM-dd HH:mm:ss} | 使用时长: {elapsedRoundedSeconds} 秒");
 
-                            var existingRecord = records.FirstOrDefault(r => r.ProcessName == activeProcessName);
+                            stopwatch.Restart();
+                            activeProcessName = currentProcessName;
+                            records.Add(new Record(activeProcessName, DateTime.Now, elapsedRoundedSeconds));
+                            //var elapsed = stopwatch.Elapsed;
 
-                            if (existingRecord != null)
-                            {
-                                existingRecord.Duration += elapsed;
-                            }
-                            else
-                            {
-                                records.Add(new Record(activeProcessName, elapsed));
-                            }
+                            //var existingRecord = records.FirstOrDefault(r => r.ProcessName == activeProcessName);
 
-                            records = records.OrderByDescending(r => r.Duration).ToList();
+                            //if (existingRecord != null)
+                            //{
+                            //    existingRecord.Duration += elapsed;
+                            //}
+                            //else
+                            //{
+                            //    records.Add(new Record(activeProcessName, elapsed));
+                            //}
 
-                            Console.WriteLine("应用使用时长记录：");
-                            foreach (var record in records)
-                            {
-                                var formattedDuration = DurationFormatter.FormatDuration(record.Duration);
-                                Console.WriteLine($"应用: {record.ProcessName}, 使用时长: {formattedDuration}");
-                                record.FormattedDuration = formattedDuration;
-                            }
+                            //records = records.OrderByDescending(r => r.Duration).ToList();
+
+                            //foreach (var record in records)
+                            //{
+                            //    var formattedDuration = DurationFormatter.FormatDuration(record.Duration);
+                            //    Console.WriteLine($"应用: {record.ProcessName}, 使用时长: {formattedDuration}");
+                            //    record.FormattedDuration = formattedDuration;
+                            //}
 
                             CsvWriter.WriteRecordsToCsv(records, "Record.csv");
 
@@ -128,5 +135,23 @@ namespace ProcessMonitor
         // 获取该窗口所属的进程 ID
         [DllImport("user32.dll")]
         private static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint processId);
+
+        public void WriteLog(string message)
+        {
+            string logDirectory = "Log";
+            string logFileName = $"{DateTime.Now:yyyy-MM-dd}.log";
+            string logFilePath = Path.Combine(logDirectory, logFileName);
+
+            // 创建日志文件夹（如果不存在）
+            Directory.CreateDirectory(logDirectory);
+
+            // 写入日志
+            using (StreamWriter writer = File.AppendText(logFilePath))
+            {
+                writer.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss}");
+                writer.WriteLine($" {message}");
+                writer.WriteLine("--------------------------------------------------------------------");
+            }
+        }
     }
 }

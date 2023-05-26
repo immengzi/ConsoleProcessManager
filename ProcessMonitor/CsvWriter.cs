@@ -14,11 +14,11 @@ namespace ProcessMonitor
         {
             using (var writer = new StreamWriter(filePath, false, Encoding.UTF8))
             {
-                writer.WriteLine("ProcessName,Duration");
+                writer.WriteLine("ProcessName,StartDateTime,Duration");
 
                 foreach (var record in records)
                 {
-                    writer.WriteLine($"{record.ProcessName},{record.FormattedDuration}");
+                    writer.WriteLine($"{record.ProcessName},{record.StartDateTime},{record.Duration}");
                 }
             }
         }
