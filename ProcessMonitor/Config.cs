@@ -32,7 +32,7 @@ namespace ProcessMonitor
                 // 创建新的配置文件并设置初始值
                 Config newConfig = new Config
                 {
-                    StartupEnabled = false,
+                    StartupEnabled = true,
                     ThemeColor = "dark"
                 };
 
