@@ -10,13 +10,11 @@ namespace ProcessMonitor
     {
         static void Main(string[] args)
         {
-            var config = new Config();
-            config.LoadConfig();
-
-            bool startupEnabled = config.StartupEnabled;
+            var config = Config.LoadConfig();
             string themeColor = config.ThemeColor;
 
-            if (startupEnabled)
+            Console.WriteLine(themeColor);
+            if (config.StartupEnabled)
             {
                 // 执行开机自启逻辑
                 Console.WriteLine("开机自启已启用。");
@@ -25,10 +23,12 @@ namespace ProcessMonitor
             {
                 Console.WriteLine("开机自启已禁用。");
             }
+
             var processMonitorMonitor = new ProcessMonitor();
             processMonitorMonitor.StartMonitoring();
 
             Console.ReadLine();
+
         }
     }
 }
