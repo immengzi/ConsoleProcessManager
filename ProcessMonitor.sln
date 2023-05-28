@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33712.159
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessMonitor", "ProcessMonitor\ProcessMonitor.csproj", "{85BB3649-28A7-40C3-8406-470682DB793A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProcessMonitor", "ProcessMonitor\ProcessMonitor.csproj", "{85BB3649-28A7-40C3-8406-470682DB793A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataBase", "DataBase\DataBase.csproj", "{F27DAFCE-D728-4E7E-8955-C1621AC80BE8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{85BB3649-28A7-40C3-8406-470682DB793A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{85BB3649-28A7-40C3-8406-470682DB793A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{85BB3649-28A7-40C3-8406-470682DB793A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F27DAFCE-D728-4E7E-8955-C1621AC80BE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F27DAFCE-D728-4E7E-8955-C1621AC80BE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F27DAFCE-D728-4E7E-8955-C1621AC80BE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F27DAFCE-D728-4E7E-8955-C1621AC80BE8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
