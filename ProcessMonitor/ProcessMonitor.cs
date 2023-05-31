@@ -38,49 +38,27 @@ namespace ProcessMonitor
             {
                 if (isMonitoring)
                 {
+                    var currentProcessName = GetActiveProcessName();
+                    // 排除无焦点的情况
+                    if (currentProcessName != activeProcessName && currentProcessName != "Idle")
                     {
-                        var currentProcessName = GetActiveProcessName();
-                        // 排除无焦点的情况
-                        if (currentProcessName != activeProcessName && currentProcessName != "Idle")
-                        {
-                            double elapsedSeconds = stopwatch.Elapsed.TotalSeconds;
-                            int elapsedRoundedSeconds = elapsedSeconds < 1 ? 0 : (int)Math.Ceiling(elapsedSeconds);
-                            Console.WriteLine($"应用: {activeProcessName} | 开始时间: {DateTime.Now:yyyy-MM-dd HH:mm:ss} | 使用时长: {elapsedRoundedSeconds} 秒");
-                            WriteLog($"应用: {activeProcessName} | 开始时间: {DateTime.Now:yyyy-MM-dd HH:mm:ss} | 使用时长: {elapsedRoundedSeconds} 秒");
+                        double elapsedSeconds = stopwatch.Elapsed.TotalSeconds;
+                        int elapsedRoundedSeconds = elapsedSeconds < 1 ? 0 : (int)Math.Ceiling(elapsedSeconds);
+                        Console.WriteLine($"应用: {activeProcessName} | 开始时间: {DateTime.Now:yyyy-MM-dd HH:mm:ss} | 使用时长: {elapsedRoundedSeconds} 秒");
+                        WriteLog($"应用: {activeProcessName} | 开始时间: {DateTime.Now:yyyy-MM-dd HH:mm:ss} | 使用时长: {elapsedRoundedSeconds} 秒");
 
-                            stopwatch.Restart();
-                            activeProcessName = currentProcessName;
-                            records.Add(new Record(activeProcessName, DateTime.Now, elapsedRoundedSeconds));
-                            //var elapsed = stopwatch.Elapsed;
+                        stopwatch.Restart();
+                        activeProcessName = currentProcessName;
+                        records.Add(new Record(activeProcessName, DateTime.Now, elapsedRoundedSeconds));
+                            
+                        SaveProcessIcon(activeProcessName); // 保存ICO图标
+                        CsvWriter.WriteRecordsToCsv(records, "Record.csv");
 
-                            //var existingRecord = records.FirstOrDefault(r => r.ProcessName == activeProcessName);
-
-                            //if (existingRecord != null)
-                            //{
-                            //    existingRecord.Duration += elapsed;
-                            //}
-                            //else
-                            //{
-                            //    records.Add(new Record(activeProcessName, elapsed));
-                            //}
-
-                            //records = records.OrderByDescending(r => r.Duration).ToList();
-
-                            //foreach (var record in records)
-                            //{
-                            //    var formattedDuration = DurationFormatter.FormatDuration(record.Duration);
-                            //    Console.WriteLine($"应用: {record.ProcessName}, 使用时长: {formattedDuration}");
-                            //    record.FormattedDuration = formattedDuration;
-                            //}
-                            SaveProcessIcon(activeProcessName); // 保存ICO图标
-                            CsvWriter.WriteRecordsToCsv(records, "Record.csv");
-
-                            stopwatch.Restart();
-                            activeProcessName = currentProcessName;
-                        }
-
-                        Thread.Sleep(10);
+                        stopwatch.Restart();
+                        activeProcessName = currentProcessName;
                     }
+
+                    Thread.Sleep(10);
                 }
             }
             
