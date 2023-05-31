@@ -8,7 +8,8 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using Microsoft.Win32;
-
+using DataBase.Models;
+using DataBase.Services;
 namespace ProcessMonitor
 {
 
@@ -21,13 +22,21 @@ namespace ProcessMonitor
         private Stopwatch stopwatch;
         private List<Record> records;
         private bool isMonitoring;
-
+        private readonly MyDbContext dbContext;
+        private readonly DataBase.Services.DataBase dataBase;
+        private readonly AppData appData;
+        private readonly Data data;
         public ProcessMonitor()
         {
             activeProcessName = GetActiveProcessName(); // 初始化为当前活动的软件名称
             stopwatch = new Stopwatch();
             records = new List<Record>();
             isMonitoring = true;
+            dbContext = new MyDbContext();
+            dataBase = new DataBase.Services.DataBase(dbContext);
+            appData = new AppData(dataBase);
+            data = new Data(appData, dataBase);
+            appData.Load();
         }
 
         public void StartMonitoring()
@@ -42,6 +51,7 @@ namespace ProcessMonitor
                     // 排除无焦点的情况
                     if (currentProcessName != activeProcessName && currentProcessName != "Idle")
                     {
+
                         double elapsedSeconds = stopwatch.Elapsed.TotalSeconds;
                         int elapsedRoundedSeconds = elapsedSeconds < 1 ? 0 : (int)Math.Ceiling(elapsedSeconds);
                         Console.WriteLine($"应用: {activeProcessName} | 开始时间: {DateTime.Now:yyyy-MM-dd HH:mm:ss} | 使用时长: {elapsedRoundedSeconds} 秒");
