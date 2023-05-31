@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -71,7 +72,7 @@ namespace ProcessMonitor
                             //    Console.WriteLine($"应用: {record.ProcessName}, 使用时长: {formattedDuration}");
                             //    record.FormattedDuration = formattedDuration;
                             //}
-
+                            SaveProcessIcon(activeProcessName); // 保存ICO图标
                             CsvWriter.WriteRecordsToCsv(records, "Record.csv");
 
                             stopwatch.Restart();
@@ -103,7 +104,7 @@ namespace ProcessMonitor
                 Console.WriteLine("记录已恢复~");
             }
         }
-        
+
         /// <summary>
         /// 获得当前处于Active的进程名称
         /// </summary>
@@ -151,6 +152,39 @@ namespace ProcessMonitor
                 writer.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss}");
                 writer.WriteLine($" {message}");
                 writer.WriteLine("--------------------------------------------------------------------");
+            }
+        }
+
+        private void SaveProcessIcon(string processName)
+        {
+            string iconDirectory = "ico";
+            string iconFileName = $"{processName}.ico";
+            string iconFilePath = Path.Combine(iconDirectory, iconFileName);
+
+            // 创建ico文件夹（如果不存在）
+            Directory.CreateDirectory(iconDirectory);
+
+            // 检查是否已存在ico图标文件，如果存在则不执行任何操作
+            if (File.Exists(iconFilePath))
+            {
+                return;
+            }
+
+            // 获取进程的图标
+            using (Process process = Process.GetProcessesByName(processName).FirstOrDefault())
+            {
+                if (process != null)
+                {
+                    Icon processIcon = Icon.ExtractAssociatedIcon(process.MainModule.FileName);
+                    if (processIcon != null)
+                    {
+                        // 保存图标为ico文件
+                        using (FileStream stream = new FileStream(iconFilePath, FileMode.Create))
+                        {
+                            processIcon.Save(stream);
+                        }
+                    }
+                }
             }
         }
     }
